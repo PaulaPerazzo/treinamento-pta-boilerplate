@@ -3,22 +3,21 @@ import { User } from '@models/User';
 import { Citi, Crud } from '../global'
 
 export default class UserController implements Crud {
+    async create(req: Request, res: Response) {
+        const { firstName, lastName, age } = req.body;
 
-    async create(request: Request, response: Response){
-        return
+        const isUndefined = Citi.areValuesUndefined(firstName, lastName, age)
+
+        if (isUndefined) {
+            return res.status(400).send()
+        }
+
+        const newUser = { firstName, lastName, age }
+        const {httpStatus, message} = await Citi.insertIntoDatabase(User, newUser)
+
+        return res.status(httpStatus).send({ message })
+
     }
 
-    async get(request: Request, response: Response){
-        return
-    }
-
-    async delete(request: Request, response: Response){
-        return
-    }
-
-    async update(request: Request, response: Response){
-        return
-    }
-
-    
 }
+
