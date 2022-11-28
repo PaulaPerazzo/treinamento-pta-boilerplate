@@ -19,5 +19,21 @@ export default class UserController implements Crud {
 
     }
 
+    async get(req: Request, res: Response) {
+        const { httpStatus, values } = await Citi.getAll(User);
+        return res.status(httpStatus).send(values);
+    }
+
+    async delete(req: Request, res: Response) {
+        const { id } = req.params;
+        const { message, value: userFound } = await Citi.findByID(User, id);
+        
+        if (!userFound) return res.status(400).send({message});
+        
+        const {httpStatus, messageFromDelete} = await Citi.deleteValue(User, userFound);
+        
+        return res.status(httpStatus).send({messageFromDelete});
+    }
+
 }
 
